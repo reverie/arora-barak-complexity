@@ -1,0 +1,11 @@
+1.a. f = o(g)
+  b. f = o(g)
+  c. f = o(g)
+  d. f = o(g)
+  e. f = o(g)
+  f. f = o(g)
+
+2. 
+
+
+ 
