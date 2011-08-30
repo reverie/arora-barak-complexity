@@ -6,6 +6,21 @@
   f. f = o(g)
 
 2. 
+  a. O(n)
+  b. O(n^2)
+  c. O(2**n)
+  d. O(logn)
+  e. O(n)
+  f. O(n*logn)
+  g. 3**log(n) -> n**log(3)
+  h. I get O(n^2*logn), but the solution says O(n^2). Why? Expanding it out, you get e.g.: 
+    8*f(n/4) + 4*O((n/4)**2) + 2*O((n/2)**2) + O(n**2)
+    -> 8*f(n/4) + O(n**2) + O(n**2) + O(n**2)
+    collecting, -> O(n**log2) + logn*O(n**2)
+    -> O(n**2*logn). Going to ask around.
+
+
+3. The last one rotates at 212/50^12 rotations per minute. That's 10^-19 rotations per minute. Assuming a radius of 3", a point on the outside moves 6pi inches per rotation. that's 6pi* 10^-19 inches per minute. That's 10*-11 millimeters per year. So maybe 100 years to move an atom's distance? And it would take more than that to break apart. 
 
 
  
