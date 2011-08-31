@@ -1,0 +1,1 @@
+Specification of PAL TM doesn't need to write start symbol to work tape given that the text specifies that every tape starts with the start symbol.

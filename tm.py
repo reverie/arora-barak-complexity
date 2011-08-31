@@ -125,7 +125,6 @@ class TuringMachine(object):
             print "Tape %d:" % i
             t.pprint()
 
-
 # 0. Go x until y, (writing z)
 # 1. Go to end
 # 2. Add 1
