@@ -60,10 +60,13 @@ class Tape(object):
                 self._expand_right()
         elif move == LEFT:
             self._position -= 1
-            if self._position < self._negative_space:
+            if self._position < -self._negative_space:
                 self._expand_left()
         else:
             raise ValueError("Unknown move %s" % move)
+
+    def pprint(self):
+        print ' '.join(map(str, self._contents))
 
 def augment_default_alphabet(alphabet):
     alphabet = alphabet or []
@@ -105,12 +108,22 @@ class TuringMachine(object):
         for i, m in enumerate(moves):
             self.tapes[i].move(m)
 
-    def run(self, input_contents):
+    def run(self):
+        while self.current_state != HALT:
+            self.run_next_step()
+
+    def initialize(self, input_contents):
         self.tapes = [Tape() for x in range(self._num_tapes)]
         self.tapes[0] = Tape(input_contents)
 
-        while self.current_state != HALT:
-            self.run_next_step()
+    def run_on(self, input_contents):
+        self.initialize(input_contents)
+        self.run()
+
+    def printall(self):
+        for i, t in enumerate(self.tapes):
+            print "Tape %d:" % i
+            t.pprint()
 
 
 # 0. Go x until y, (writing z)

@@ -28,7 +28,7 @@ class PAL(object):
                 m1 = tm.LEFT
                 new_state = cls.LEFT
         elif state == cls.LEFT:
-            if i1 != tm.START_S:
+            if i1 != tm.START_A:
                 m1 = tm.LEFT
             else:
                 m1 = tm.RIGHT
@@ -68,6 +68,6 @@ if __name__ == '__main__':
     input = sys.argv[1] if len(sys.argv) > 1 else '10101'
     input = list(input)
     m = PAL.make()
-    m.run(input)
-    # TODO: print output
+    m.run_on(input)
+    m.printall()
 
