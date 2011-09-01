@@ -15,7 +15,7 @@ class PAL(object):
         new_state = state
 
         # Transitions, structured as the textbook presents them
-        if state == tm.START_S:
+        if state == tm.QSTART:
             m1 = m2 = tm.RIGHT
             new_state = cls.COPY
         elif state == cls.COPY:
@@ -77,7 +77,7 @@ class ADDER(object):
         m1, m2, m3 = tm.STAY, tm.STAY, tm.STAY
         new_state = state
 
-        if state == tm.START_S:
+        if state == tm.QSTART:
             m1 = tm.RIGHT
             new_state = cls.COPY
         elif state == cls.COPY:

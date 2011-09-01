@@ -22,7 +22,7 @@ START_A = Letter('start')
 BLANK = Letter('blank')
 
 # Default states:
-START_S = State('start')
+QSTART = State('start')
 HALT = State('halt')
 
 # Movements
@@ -78,7 +78,7 @@ def augment_default_alphabet(alphabet):
 
 def augment_default_states(states):
     states = states or []
-    ret = set([START_S, HALT])
+    ret = set([QSTART, HALT])
     for s in states:
         assert isinstance(s, State) or isinstance(s, basestring) and len(s) == 1
         ret.add(s)
@@ -96,7 +96,7 @@ class TuringMachine(object):
         self.alphabet = augment_default_alphabet(alphabet)
         self.states = augment_default_states(states)
         self.transition_function = transition_function
-        self.current_state = START_S
+        self.current_state = QSTART
 
     def run_next_step(self):
         tape_values = tuple(t.read() for t in self.tapes)
