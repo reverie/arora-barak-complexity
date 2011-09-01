@@ -165,6 +165,16 @@ class ADDER(object):
             cls.transition,
             3) # Input, work, output
 
+class MULTIPLY(object):
+    # Input, work, output
+    # General plan:
+    # 1. Copy 1st string to work tape, erasing it
+    # 2. While 1st tape is nonzero:
+    # 2.   Add tape 2 to output
+    # 3.   Subtract 1 from tape 1
+    pass
+
+
 if __name__ == '__main__':
     # Test PAL
     #input = sys.argv[1] if len(sys.argv) > 1 else '10101'
