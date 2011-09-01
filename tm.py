@@ -120,7 +120,17 @@ class TuringMachine(object):
         self.initialize(input_contents)
         self.run()
 
+    def run_verbosely(self, input_contents):
+        self.initialize(input_contents)
+        while self.current_state != HALT:
+            print '-'*20
+            self.printall()
+            self.run_next_step()
+        print '-'*20
+        self.printall()
+
     def printall(self):
+        print "State:", self.current_state
         for i, t in enumerate(self.tapes):
             print "Tape %d:" % i
             t.pprint()
