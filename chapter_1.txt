@@ -41,3 +41,38 @@ Instead of simulating each head by marking and moving obliviously, we adapt the 
 10. We assume the program starts at the first line and i is initially 0. This programming language maps quite directly to a Turing Machine. Assign a state to each line of the program. The variable i is the position of the tape head. Every label could do one of two things, depending on whether the tape matches \sigma: continue in that block, or (assuming) skip to the next label. This is represented in the TM's transition table as two obvious transitions, to either the next line or the next label's line, depending on the input. Commands that "Set" a value correspond to the TM's output, and a "Stay" move. The "Goto" command corresponds to a state transition (to the label's line's state) with no output. The increment and decrement commands corresponding to moving the tape head left and right, again without output. Finally, the "Output" command is equivalent to writing on the TM's output tape and halting. In none of these cases does the TM require more than one step to execute a line of the program, so if the program runs in T(n) then the TM does too.
 
 11. See c1.py.
+
+12. 
+a. Let S be the set of total functions, i.e. all functions computable by a T_M that always halts. Then f_S is the Boolean function that on input \alpha outputs 1 iff M_\alpha computers a function in S. If HALT were computable, f_S would be computable: f_S(x) is 1 if M_x always halts, or 0 if it doesn't. But f_S is not computable -- by Rice's Theorem -- so HALT is not computable.
+b. 
+    Assume, for sake of contradiction, that there is some non-trivial set S of partial functions that induces a computable function f_S. Then, there is some machine M_S that computes f_S. In other words, given a machine M, we M_S(M) determines whether M computes a partial function in S. 
+
+    Given a TM M, let Bind(M, i) be the machine that ignores its input and simulates M on i
+    #Given a TM M, let Wrap(M, i, action) be the machine that first checks if it's input equals i. If it is, it performs `action`, which is either a finite string, meaning print that string and halt, or LOOP, meaning enter an infinite loop.
+
+    Give any machine M_orig and input i, we can determine, using M_S, whether the machine M_orig halts on input i as follows:
+    0. Let M = Bind(M_orig, i)
+    1. let s1 = M_S(M)
+    2. Find the first machine M' such that M_S(M') != s1. Such a machine exists, because S is non-trivial, and we can find it by running M_S on every string until we find one.
+    3. Let s2 = M_S(M')
+    4. For each binary string x, in lexicographic order:
+        a. Let M_x be the TM that simulates M' if it's input is less than or equal to x, and simulates M otherwise
+        b. If M_S(M_x) != s1, BREAK (remembering the values x and M_x)
+        (This procedure must terminate because s1 != s2.)
+    5. Let Loop be the machine that loops on every input
+    6. Let sL = M_S(Loop)
+    7. Since s1 != s2, one of them must be different than sL. 
+    8. If s1 != sL: return FALSE (Since M behaves the same on every input (it ignores its input), then behaving differently than sL means it halts on every input.)
+# So s1 == sL != s2
+    9. Let M_x2 be the machine that operates like M_x, except on input x, where it behaves as follows: Simulate M' on x, and if it halts, simulate M on x
+    10. Let sx2 = M_S(M_x2)
+    11. If sx2 == s2: return TRUE. M_x2 did not behave like M on x. If M' halted on x, M_x2 would have behaved like M on x, by definition. Therefore, it looped forever, meaning M does not loop on X, meaning it halts.
+# So sx2 == s1 == sL != s2
+    12. Let O=M'(x). We know by the explanation in step 11 that M' must halt on x.
+    13. Let M_O be the machine that simulates M, except on x where it waits for M to halt and then prints O.
+    14. Return M_S(M_O) != s1
+        If M_S(M_O) == s1, then we know that M_O behaves like M on x, meaning it can't halt, meaning M never halts, so return False.
+        if M_S(M_O) == s2, then we know that M_O's simulation of M halted on x, so return True.
+
+    By the algorithm above, we have used the computability of some arbitrary f_S to solve the halting problem, which is impossible. Therefore there is no computable f_S. QED.
+

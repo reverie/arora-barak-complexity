@@ -1,3 +1,5 @@
 Specification of PAL TM doesn't need to write start symbol to work tape given that the text specifies that every tape starts with the start symbol.
 
 Problem 10: should specify it starts at the first line, and i starts at 0.
+
+Problem 12b: given part (a), should clarify that you can use that HALT uncomputable.
