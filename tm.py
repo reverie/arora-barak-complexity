@@ -9,17 +9,22 @@ class Symbol(object):
         return "<%s>" % self.name.upper()
 
 class State(Symbol):
-    pass
+    def __repr__(self):
+        return "<State:%s>" % self.name.upper()
 
 class Letter(Symbol):
-    pass
+    def __repr__(self):
+        return "<Letter:%s>" % self.name.upper()
 
 class Move(Symbol):
-    pass
+    def __repr__(self):
+        return "<Move:%s>" % self.name.upper()
 
 # Default alphabet:
 START_A = Letter('start')
 BLANK = Letter('blank')
+ZERO = Letter('0')
+ONE = Letter('1')
 
 # Default states:
 QSTART = State('start')
@@ -32,6 +37,8 @@ RIGHT = Move('right')
 
 class Tape(object):
     def __init__(self, input_contents=[]):
+        for l in input_contents:
+            assert isinstance(l, Letter)
         self._contents = [START_A] + input_contents
         self._position = 0
         self._negative_space = 0 # How far out into the negatives we've gone
@@ -70,9 +77,9 @@ class Tape(object):
 
 def augment_default_alphabet(alphabet):
     alphabet = alphabet or []
-    ret = set([START_A, BLANK, '0', '1'])
+    ret = set([START_A, BLANK, ZERO, ONE])
     for a in alphabet:
-        assert isinstance(a, Letter) or isinstance(a, basestring) and len(a) == 1
+        assert isinstance(a, Letter)
         ret.add(a)
     return ret
 
@@ -80,7 +87,7 @@ def augment_default_states(states):
     states = states or []
     ret = set([QSTART, HALT])
     for s in states:
-        assert isinstance(s, State) or isinstance(s, basestring) and len(s) == 1
+        assert isinstance(s, State)
         ret.add(s)
     return ret
 
