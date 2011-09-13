@@ -1,4 +1,5 @@
 import sys
+import itertools
 
 import tm
 
@@ -175,16 +176,157 @@ class MULTIPLY(object):
     pass
 
 
-if __name__ == '__main__':
-    # Test PAL
-    #input = sys.argv[1] if len(sys.argv) > 1 else '10101'
-    #input = list(input)
-    #m = PAL.make()
-    #m.run_on(input)
-    #m.printall()
+class TMEncoder(object):
+    """
+    Encodes a turing machine `m` as a string of 1s and 0s.
+    
+    We need to encode the following types of data:
+        - number of tapes
+        - alphabet
+            - symbol name
+            - separator
+        - list of states
+            - state name
+            - separator
+        - transition table
+            - list of: current state, input list (with separators), output state, output writes, output moves
+            - separators
+        - separations between the above
 
-    # Test ADD
+    Our general strategy is to use "1" as the separator symbol, and encode all child data by
+    replacing "1" with "01". So the separator is only valid if not preceded by a 1.
+
+    We use the following enumeration convention...
+        # Default alphabet:
+     0  START_A = Letter('start')
+     1  BLANK = Letter('blank')
+
+        # Default states:
+     0  QSTART = State('start')
+     1  HALT = State('halt')
+
+        # Movements
+     0  LEFT = Move('left')
+     1  STAY = Move('stay')
+     2  RIGHT = Move('right')
+
+    ...with user-defined alphabets and states following in arbitrary order.
+
+    Pretty much everything else is implicit in the transition table, but we separate it out because it's easier.
+    """
+    def encode(self, bstring):
+        return bstring.replace('1', '01')
+
+    def decode(self, bstring):
+        return bstring.replace('01', '1')
+
+    def encode_and_pack(self, list_of_bstrings):
+        return '1'.join(map(self.encode, list_of_bstrings))
+
+    def _encode_set(self, s, first_entries):
+        """
+        `s` is an iterable of items to map to binary strings
+        `first_entries` is an ordered iterable of the items to come first
+        """
+        item_list = []
+        for entry in first_entries:
+            s.remove(entry)
+            item_list.append(entry)
+        item_list += list(s)
+        bstrs = [self.number_to_binary(i) for i, _ in enumerate(item_list)]
+        result_map = dict(zip(item_list, bstrs))
+        bstr = self.encode_and_pack(bstrs)
+        return result_map, bstr
+        
+    def encode_alphabet(self, alphabet):
+        """
+        Returns (alpha_map, bstr) pair
+        alpha_map: char -> num
+        """
+        return self._encode_set(alphabet, [tm.START_A, tm.BLANK])
+
+    def encode_states(self, states):
+        """
+        Returns (state_map, bstr) pair
+        state_map: state -> num
+        """
+        return self._encode_set(states, [tm.QSTART, tm.HALT])
+
+    def encode_moves(self):
+        return self._encode_set([tm.LEFT, tm.STAY, tm.RIGHT], [tm.LEFT, tm.STAY, tm.RIGHT])
+
+    def encode_transitions(self, machine, num_tapes, alpha_map, state_map):
+        """
+        Binary string representing the machine's entire transition table.
+        """
+        result_bstrs = []
+        move_map, _ = self.encode_moves()
+        for state, state_bstr in state_map.items():
+            if state == tm.HALT:
+                # Transition is not defined from HALT state
+                continue
+            for input_alphas in itertools.product(*[alpha_map.keys()]*num_tapes):
+                new_state, writes, moves = machine.transition_function(state, input_alphas)
+                bstrs = []
+                bstrs.append(state_map[state])
+                bstrs.append(self.encode_and_pack([alpha_map[a] for a in input_alphas]))
+                bstrs.append(state_map[new_state])
+                bstrs.append(self.encode_and_pack([alpha_map[a] for a in writes]))
+                bstrs.append(self.encode_and_pack([move_map[m] for m in moves]))
+                bstr = self.encode_and_pack(bstrs)
+                result_bstrs.append(bstr)
+        return self.encode_and_pack(result_bstrs)
+
+    def number_to_binary(self, n):
+        assert n >= 0
+        result = ['0']
+        while n:
+            if n % 2:
+                assert result[-1] == '0'
+                result[-1] = '1'
+                n -= 1
+            else:
+                result.append('0')
+                n /= 2
+        return ''.join(reversed(result))
+
+    def TM_to_binary(self, m):
+        num_tapes, bstr_tapes = m._num_tapes, self.number_to_binary(m._num_tapes)
+        alpha_map, bstr_alpha = self.encode_alphabet(m.alphabet)
+        state_map, bstr_states = self.encode_states(m.states)
+        bstr_tt = self.encode_transitions(m, num_tapes, alpha_map, state_map)
+
+        result = [
+            bstr_tapes,
+            bstr_alpha,
+            bstr_states,
+            bstr_tt,
+        ]
+        return self.encode_and_pack(result)
+
+    def __init__(self):
+        return
+
+def binary_to_TM(s):
+    """Accepts a string of 1s and 0s and returns the TM it encodes."""
+
+def test_encoding():
+    e = TMEncoder()
+    m = PAL.make()
+    print e.TM_to_binary(m)
+
+def test_PAL():
+    input = sys.argv[1] if len(sys.argv) > 1 else '10101'
+    input = list(input)
+    m = PAL.make()
+    m.run_on(input)
+    m.printall()
+
+def test_ADD():
     input = list('1001') + [tm.BLANK] + list('111')
     m = ADDER.make()
     m.run_verbosely(input)
+
+if __name__ == '__main__':
+    test_encoding()
 
