@@ -76,3 +76,51 @@ b.
 
     By the algorithm above, we have used the computability of some arbitrary f_S to solve the halting problem, which is impossible. Therefore there is no computable f_S. QED.
 
+13
+a. 
+DIVIDES(x, y) = \exists k : y = x * k
+PRIME(y) = \forall x (x=1) \lor (x=y) \lor \lnot DIVIDES(x, y)
+CUBE(x) = x*x*x # macros?
+IN_RANGE(i, x) = (x > CUBE(i + C)) \land (x < CUBE(i + C + 1))
+P(i) = x: IN_RANGE(i, x) \land PRIME(x) \land ( \forall y: \lnot PRIME(y) \lor \lnot IN_RANGE(i, y) \lor (y > x) \lor y = x) # Is this allowed?
+BIT(n,i) = DIVIDES(P(i), n)
+
+b. COMPARE(n, m, i, j) = BIT(n, i) \land BIT(m, j)
+c. Assume it's one-directional as well. Store (state name, head position index, list of tape entries) packed and encoded as in the solution to Problem 11.
+d. INIT_(M,x)(n) = \forall x: COMPARE(n, <the pre-computed TM state encoding>, x, x)
+e. HALT_M(n) = an expression that gets the bit on the tape under the head, and the state, and has a precomputed set of all (state, input) pairs that lead to HALT and compares the pair encoded by n to that set
+f. NEXT(n, m) is similar to above, except it compares the pair of tapes on the tape movement to the encoded transition table
+g. VALID_M(m, t) = \forall x: (x > t) \lor NEXT(m[x], m[x+1])
+h. HALT_(M,x)(t) = \exists m : VALID_M(m, t) \land (m[0] = INIT_(M,x)(x)) \land HALT_M(m[t]) # assuming for simplicity that HALT transitions to HALT
+i. As we can see above, HALT(x, i) can be encoded as a number-theoretic statement. Therefore, number-theoretic statements are uncomputable.
+
+14. High-level poly-time algorithms without proof.
+a. Use a union-find data structure. Traverse the adjacency list, and union all pairs of vertices that are adjacent. At the end, return true iff there is exactly one set in the data structure.
+b. For each triple of vertices, check whether all three sides of the triangle are in the adjacency list. If they are, return false. Otherwise, at the end, return true.
+c. 
+While any vertex is not colored:
+    Create a queue
+    Pick an uncolored vertex and add it into the queue
+    While the queue is not empty:
+        Get the vertex from the queue
+        Mark this vertex as "processed"
+        If it's uncolored, assign it the color red or blue arbitrarily
+        For each of its neighbors:
+            If it's the same color as this vertex, return false
+            If it's uncolored, assign it the opposite color of this vertex
+            If it isn't "processed", add it to the queue
+Return true
+d. First, make sure it's connected with the algorithm from (a). Then:
+Create a queue
+Pick any starting vertex and add it to the queue
+While the queue is nonempty:
+    get the first vertex from the queue
+    mark it as "processed"
+    for each of its edges:
+        if the edge is "processed":
+            do nothing
+        otherwise:
+            if the adjacent vertex is "processed": return false
+            else: 
+                mark the edge as processed
+                append the adjacent vertex to the queue

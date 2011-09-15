@@ -3,3 +3,5 @@ Specification of PAL TM doesn't need to write start symbol to work tape given th
 Problem 10: should specify it starts at the first line, and i starts at 0.
 
 Problem 12b: given part (a), should clarify that you can use that HALT uncomputable.
+
+13g "only m IS a tuple"? how do we use tuples with the operations of 1.5.2?
