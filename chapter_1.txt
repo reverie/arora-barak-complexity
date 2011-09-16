@@ -1,3 +1,5 @@
+Problem set summary: The most enjoyable was 12, in particular proving Rice's Theorem. Fully specifying at least one TM was useful (Problem 1), but I didn't see the need to do more than that. Problem 5, about the oblivious TM, was where I felt I was building up a lot of the mental framework around this material. It took me the longest to solve. Problem 13 is obviously important, and it was worthwhile to work through, even though it was underspecified and I'm not sure my answers are formally correct. The rest of the problems, while often important to have thought of, were mostly easier and I didn't go into full detail.
+
 1. See c1.py for addition, and the outline for multiplication.
 
 2-4. Shrink alphabet, reduce tapes, and unidirectional tape: skipping explicit TM construction.
@@ -124,3 +126,9 @@ While the queue is nonempty:
             else: 
                 mark the edge as processed
                 append the adjacent vertex to the queue
+
+15. 
+a. The binary-coded representation in base b>2 uses a constant multiple more space compared to the binary reprentation. It can be manipulated as such, or translated back and forth in polynomial time.
+b. Given a number n in unary, we can check if a unary number x divides it as follows: repeatedly write x to a work tape, while moving the tape head that holds n across n. If the latter reaches the end of n at the same time that and instance of "x" finishes writing, return it is divisible, otherwise it is not. This takes time linear in n. To try all possibilities between l and k requires k-l tries, which is linear in the size of k+l. So UNARYFACTORING can be solved in O(n**2) which is in P.
+
+
