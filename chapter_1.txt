@@ -32,7 +32,7 @@ It remains to show that this simulation can be done in as few as 2 tapes. To do 
 - Each simulation step is also only a constant-factor slower, since we can run over all the interleaved tapes at once, and the T_2 decrement is performed sequentially afterward. 
 
 6. Use a similar construction to 5 above, with T_1, T_2, and decrementing T_2 for each step of the simulation. However, we (a) forget about doing it only 2 tapes, and (b) simulate each step in a different way.
-Instead of simulating each head by marking and moving obliviously, we adapt the construction from the proof of Theorem 1.9. Every 2**i steps, we perform a left shift at index i followed by a right shift at index i.
+Instead of simulating each head by marking and moving obliviously, we adapt the construction from the proof of Theorem 1.9. Every 2**i steps, we perform a left shift at index i followed by a right shift at index i. ??
 
 7. Map the plane to the linear tape by using a spiral. Since each 2-D move at worst moves to an adjacent turn of the spiral, and the circumfurence of the turn we're on at at step n is O(n), we have to move at most n steps to get to the head's next location. We can use a scratch tape to record the destination address and compare against it (O(log(n))). Thus O(T(n)*n).
 

@@ -1,0 +1,3 @@
+Missing definition of EXP
+assignement
+quadtratic
