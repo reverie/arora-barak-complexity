@@ -1,3 +1,5 @@
 Missing definition of EXP
 assignement
 quadtratic
+
+3. Hint suggests Cramer's rule, which is only for square matrices?

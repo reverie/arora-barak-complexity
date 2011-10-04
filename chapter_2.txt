@@ -1,1 +1,33 @@
-1. 
+1. Given M, p, matching this new definition, we construct a machine M' that more closely matches Definition 2.1. M' takes an input 'x' and a certificate+length 'u' such that |u| = p'(|x|), where p' is some new polynomial slightly bigger than p. The certificate+length is a 2-tuple <u', l>, and M' operates by simulating M(x, u) where u is the first l bits of u'. Put simply, we can pad the certificate to our desired length and ignore the padding.
+
+2. 2- or 3- COL: the certificate is the list of vertices in each color set. For each vertex in each set, check the adjacency list to make sure it is not adjacent to any other vertex in the same set. Since each vertex must be in at most O(|V|) such comparisons, there are in total O(|V|^2) such comparisons, and each one is doable in the amount of time it takes to check the adjacency list/matrix, which is obviously polynomial.
+CONNECTED: By Exercise 1.14 a and c, it is in P, and thus in NP.
+
+3. Adding an k-bit number and a j-bit number gives a number of at most max(k+1, j+1) bits. Multiplying a k-bit number and a j-bit number gives a number of at most (k+j) bits. So the result of any polyomial is a polynomial number of bits in the size of the input. Gaussian elimination is in P, so requires a polynomial number of such operations, and then solving the resultant triangular matrix is also a polynomial number of polynomials, so any solution vector 'x' must be polynomial in the size of the inputs. Therefore, it serves as a poly-time certificate of a solution, so LINEQ is in NP. (Or, find the solution in the first place in P time using Gaussian elimination.)
+
+4. Suppose, for sake of contradiction, that there were some Linear Programming problem Ax <= B such that x was non-polynomial in the input size. Then given such an 'A' and 'x', we could make a LINEQ
+
+
+5. A number n is prime iff for every prime factor q of n-1, there exists a number 'a' in {2...n-1} satisfying a^(n-1) = 1 (mod n) but a^((n-1)/q) != 1 (mod n). Therefore, we can construct a poly-time checkable certificate for the primality of 'n' as follows:
+    A list of the prime factors of n
+    For each prime factor, the corresponding number 'a'
+    For each prime factor, the similar certificate
+We can recursively check each certificate as follows, with a base case of 2:
+    Check that 'n' is indeed the product of the listed prime factors. This can be done by iteratively building their product, and dividing 'n' by each factor in turn to see if we need to include it again. Confirmed iff we reach 'n' successfully.
+    For each prime factor and its corresponding 'a', check that the formulae above are correct.
+    Check each sub-certificate.
+This takes polynomial time because:
+    We can share the sub-certificates. There are O(n) primes below 'n', and checking the formulae takes a constant number of operations (or log(n) since we're counting bits), so that's n*logn.
+    Checking that the prime factors list is correct is also polynomial. 'n' has O(logn) prime factors counting duplicates (consider 2^n).
+
+6.
+
+7.
+(a) Consider an NP-hard language L. Then for every L' in NP, L' <=_p L. In other words, there is a polynomial-time reduction from L' to L. If L is in P, then for every L' in NP, we can reduce it to L in polynomial time and solve L in polynomial time, so we can solve L' in polyomial time. Therefore, every language in NP would be in P, and it is known that every language in P is in NP, so P=NP.
+(b) 
+Trivial direction:
+    If P=NP and L is NP-complete, then by definition it is in NP, so it is in P.
+Nontrivial direction:
+    If L is NP-complete and L is in P, then by definition L is NP-hard, so P=NP by part (a) above.
+
+
