@@ -30,4 +30,10 @@ Trivial direction:
 Nontrivial direction:
     If L is NP-complete and L is in P, then by definition L is NP-hard, so P=NP by part (a) above.
 
+8. HALT is undecidable, so it isn't in NP, so it isn't NP-complete. However, it is NP-hard. Given a language L in NP, and any bit string `w`, consider a function `f` that maps to the bit string encoding the Turing machine that runs the verifier machine T (of L) on w and every possible certificate in order. f(w) halts iff there is a valid certificate iff w is in L.
 
+9. Essentially, the function `f` in the definition of Karp reducability need not be onto. Consider a counter example: the language L of all strings reduces to 3SAT, with all strings mapping to a single trivial instance. Clearly, since there is no string NOT in L, there can be no reverse function mapping instances of 3SAT to instances of L.
+
+10. Yes, closed uner both. L1 U L2 has a certificate (l, C) where l is a bit specifying L1 or L2, and C is a certificate for one of the original languages. Since each of L1 and L2 has a verifier that runs in poly time, our combined verifier does as well, with only a constant amount of extra work to choose which one to run. L1 /\ L2 has a certificate (C1, C2), where the verifier checks C1 against L1's verifier and C2 against L2's verifier.
+
+11. This language seems to be in NP, because the proof itself is a cerificate. Imagining the proof as a series of lines, the verifier could check that each pair of sequential lines (l1, l2) is valid according to the finite list of ZF axioms. 
